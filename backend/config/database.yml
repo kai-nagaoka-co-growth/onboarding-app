@@ -1,0 +1,40 @@
+# 【修正】書き換えろと言われた
+# default: &default
+#   adapter: mysql2
+#   encoding: utf8mb4
+#   pool: &lt;%= ENV.fetch("RAILS_MAX_THREADS", 5) %&gt;
+#   host: &lt;%= ENV.fetch("DB_HOST") %&gt;
+#   username: &lt;%= ENV.fetch("DB_USERNAME") %&gt;
+#   password: &lt;%= ENV.fetch("DB_PASSWORD") %&gt;
+#   database: &lt;%= ENV.fetch("DB_DATABASE") %&gt;
+
+# development:
+#   &lt;&lt;: *default
+
+# test:
+#   &lt;&lt;: *default
+#   database: onboarding_test
+
+# production:
+#   &lt;&lt;: *default
+
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  username: <%= ENV.fetch("DB_USERNAME", "root") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  host: <%= ENV.fetch("DB_HOST", "db") %>
+  port: <%= ENV.fetch("DB_PORT", 3306) %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_DATABASE", "onboarding_development") %>
+
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_DATABASE", "onboarding_test") %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_DATABASE", "onboarding_production") %>
