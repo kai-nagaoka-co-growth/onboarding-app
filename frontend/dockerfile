@@ -1,0 +1,20 @@
+# Node.js イメージを使用
+FROM node:23.6.0
+
+# タイムゾーンを Asia/Tokyo に設定
+ENV TZ=Asia/Tokyo
+
+# 作業ディレクトリを指定
+WORKDIR /app
+
+# Vite をグローバルインストール（バージョン固定）
+RUN npm cache clean --force
+RUN npm install -g vite@6.0.5
+
+# パッケージのインストール
+# 【修正】失敗して不要と言われたのでコメントアウト
+# COPY package.json package-lock.json ./
+# RUN npm install
+
+# エイリアスの設定（必要に応じて削除可能）
+RUN echo 'alias ll="ls -l"' >> ~/.bashrc
