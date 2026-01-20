@@ -3,8 +3,13 @@ class Api::V1::MemosController < ApplicationController
   before_action :set_memo, only: [:update, :destroy]
 
   def index
-    @memos = Memo.all.order(created_at: :desc)
+    @memos = Memo.all.order(created_at: :desc).pluck(:title,:updated_at)
     render json: @memos.as_json, status: :ok
+  end
+
+  def show
+    @memo = Memo.includes(:comments).find(params[:id])
+    render json: { memo: @memo.as_json(include: :comments) }, status: :ok
   end
 
   def create
