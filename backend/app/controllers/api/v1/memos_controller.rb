@@ -1,6 +1,6 @@
 class Api::V1::MemosController < ApplicationController
 
-  before_action :set_memo, only: [:update]
+  before_action :set_memo, only: [:update, :destroy]
 
   def index
     @memos = Memo.all.order(created_at: :desc)
@@ -22,6 +22,11 @@ class Api::V1::MemosController < ApplicationController
     else
       render json: { errors: @memo.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @memo.destroy
+    head :no_content
   end
 
   private
