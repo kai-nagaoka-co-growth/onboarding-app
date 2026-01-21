@@ -16,6 +16,8 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    tty: true
+    stdin_open: true
     volumes:
       - ./backend:/app
     depends_on:
