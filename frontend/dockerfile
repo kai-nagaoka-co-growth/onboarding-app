@@ -12,9 +12,8 @@ RUN npm cache clean --force
 RUN npm install -g vite@6.0.5
 
 # パッケージのインストール
-# 【修正】失敗して不要と言われたのでコメントアウト
-# COPY package.json package-lock.json ./
-# RUN npm install
+COPY package.json package-lock.json ./
+RUN npm install
 
 # エイリアスの設定（必要に応じて削除可能）
 RUN echo 'alias ll="ls -l"' >> ~/.bashrc
