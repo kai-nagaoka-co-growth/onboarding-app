@@ -9,7 +9,7 @@ class Api::V1::MemosController < ApplicationController
 
   def show
     memo = Memo.includes(:comments).find(params[:id])
-    render json: { memo: memo.as_json(include: :comments) }, status: :ok
+    render json: memo.as_json(include: :comments), status: :ok
   end
 
   def create

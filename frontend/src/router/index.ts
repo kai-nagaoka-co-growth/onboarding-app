@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('../views/Memos.vue'),
     },
     {
+      path: '/memos/:id',
+      name: 'memo-detail',
+      component: () => import('../views/MemoDetail.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

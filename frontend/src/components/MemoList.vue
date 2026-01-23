@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { Memo } from '../composables/useMemos'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps<{
   memos: Memo[]
   loading: boolean
   error: string | null
-  lastFetchedAt: Date | null
 }>()
 
-const emit = defineEmits<{ (e: 'reload'): void }>()
-
-function formatDate (date: number | string | Date): string {
-  const d = typeof date === 'number' || typeof date === 'string' ? new Date(date) : date
-  return new Intl.DateTimeFormat('ja-JP', { dateStyle: 'medium', timeStyle: 'short' }).format(d)
+function formatDate (date: string | number | Date): string {
+  const d = new Date(date)
+  if (Number.isNaN(d.getTime())) return ''
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${yyyy}/${mm}/${dd} ${hh}:${min}`
 }
 </script>
 
@@ -20,13 +24,15 @@ function formatDate (date: number | string | Date): string {
   <section class="memos">
     <p v-if="loading" class="memos__status">読み込み中…</p>
     <p v-else-if="error" class="memos__status memos__status--error">取得に失敗しました: {{ error }}</p>
-
     <ul v-else class="memos__list">
-      <li v-for="memo in memos" :key="memo.title" class="memo">
-        <div class="memo__header">
+      <li v-for="memo in memos" :key="memo.id" class="memo">
+        <RouterLink
+          class="memo__header memo__link"
+          :to="{ name: 'memo-detail', params: { id: String(memo.id) } }"
+        >
           <h3 class="memo__title">{{ memo.title }}</h3>
-          <small class="memo__updated">更新日時：{{ formatDate(memo.updatedAt) }}</small>
-        </div>
+          <small class="memo__updated">更新：{{ formatDate(memo.updated_at) }}</small>
+        </RouterLink>
       </li>
     </ul>
 
@@ -39,18 +45,6 @@ function formatDate (date: number | string | Date): string {
   display: grid;
   gap: 16px;
   margin: 1rem 0;
-}
-
-.memos__toolbar {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.memos__reload {
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
 }
 
 .memos__status,
@@ -78,6 +72,10 @@ function formatDate (date: number | string | Date): string {
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
+}
+
+.memo__link {
+  text-decoration: none;
 }
 
 .memo__title {

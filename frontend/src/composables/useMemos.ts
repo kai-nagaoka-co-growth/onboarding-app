@@ -1,22 +1,22 @@
 import { ref } from 'vue'
 
 export type Memo = {
+  id: number
   title: string
-  updatedAt: number
+  body?: string
+  created_at: string
+  updated_at: string
 }
-
 const memos = ref<Memo[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
-const lastFetchedAt = ref<Date | null>(null)
 
 async function fetchMemos(): Promise<void> {
-	loading.value = true
+  loading.value = true
   error.value = null
   try {
     const res = await fetch('http://localhost:3000/api/v1/memos')
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
-    lastFetchedAt.value = new Date()
     const data = await res.json()
     memos.value = data
   } catch (e: any) {
@@ -28,5 +28,5 @@ async function fetchMemos(): Promise<void> {
 }
 
 export default function useMemos() {
-  return { memos, loading, error, fetchMemos, lastFetchedAt }
+  return { memos, loading, error, fetchMemos }
 }
