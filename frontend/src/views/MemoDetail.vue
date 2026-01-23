@@ -2,6 +2,7 @@
 import { onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import useMemoDetail from '../composables/useMemoDetail'
+import CommentForm from '@/components/CommentForm.vue'
 
 const route = useRoute()
 const id = computed(() => String(route.params.id ?? ''))
@@ -9,6 +10,11 @@ const { memo, loading, error, fetchMemoDetail } = useMemoDetail()
 
 onMounted(() => { if (id.value) fetchMemoDetail(id.value) })
 watch(() => route.params.id, (next) => { if (next) fetchMemoDetail(String(next)) })
+
+function onCreated () {
+  if (id.value) fetchMemoDetail(id.value)
+}
+
 function formatDate (date: string | number | Date): string {
   const d = new Date(date)
   if (Number.isNaN(d.getTime())) return ''
@@ -46,6 +52,7 @@ function formatDate (date: string | number | Date): string {
         </div>
         <p v-else class="comments-list__empty">まだコメントがありません</p>
       </div>
+      <CommentForm :memo-id="String(memo.id)" @created="onCreated" />
     </div>
   </section>
 </template>
@@ -55,6 +62,28 @@ function formatDate (date: string | number | Date): string {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+.comments-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.comments-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
 
 .memo-detail__status {
@@ -97,8 +126,10 @@ function formatDate (date: string | number | Date): string {
 
 .memo-detail__comments {
   margin-top: 2rem;
-  padding-top: 2rem;
+  margin-bottom: 1rem;
+  padding: 2rem 0;
   border-top: 2px solid #eee;
+  border-bottom: 2px solid #eee;
 }
 
 .memo-detail__comments-title {

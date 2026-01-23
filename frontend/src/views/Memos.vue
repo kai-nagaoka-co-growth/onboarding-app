@@ -4,7 +4,7 @@ import useMemos from '../composables/useMemos'
 import MemoList from '../components/MemoList.vue'
 import MemoCreateForm from '../components/MemoCreateForm.vue'
 
-const { memos, loading, error, fetchMemos, lastFetchedAt } = useMemos()
+const { memos, loading, error, fetchMemos } = useMemos()
 onMounted(() => { fetchMemos() })
 </script>
 
@@ -17,7 +17,6 @@ onMounted(() => { fetchMemos() })
     :memos="memos"
     :loading="loading"
     :error="error"
-    :lastFetchedAt="lastFetchedAt"
     @reload="fetchMemos"
   />
 </template>
