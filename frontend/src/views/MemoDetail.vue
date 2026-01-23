@@ -9,8 +9,15 @@ const { memo, loading, error, fetchMemoDetail } = useMemoDetail()
 
 onMounted(() => { if (id.value) fetchMemoDetail(id.value) })
 watch(() => route.params.id, (next) => { if (next) fetchMemoDetail(String(next)) })
-function formatDate (date: Date): string {
-  return new Intl.DateTimeFormat('ja-JP', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+function formatDate (date: string | number | Date): string {
+  const d = new Date(date)
+  if (Number.isNaN(d.getTime())) return ''
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${yyyy}/${mm}/${dd} ${hh}:${min}`
 }
 </script>
 
@@ -26,15 +33,15 @@ function formatDate (date: Date): string {
         {{ memo.body }}
       </div>
       <br/>
-      <p class="memo-detail__updated">作成日：{{ formatDate(memo.createdAt) }}</p>
-      <p class="memo-detail__updated">更新日：{{ formatDate(memo.updatedAt) }}</p>
+      <p class="memo-detail__updated">作成日：{{ formatDate(memo.created_at) }}</p>
+      <p class="memo-detail__updated">更新日：{{ formatDate(memo.updated_at) }}</p>
       
       <div class="memo-detail__comments">
         <h3 class="memo-detail__comments-title">コメント ({{ memo.comments?.length || 0 }})</h3>
         <div v-if="memo.comments && memo.comments.length > 0" class="comments-list">
           <div v-for="comment in memo.comments" :key="comment.id" class="comment-item">
             <p class="comment-item__body">{{ comment.body }}</p>
-            <p class="comment-item__date">作成日：{{ formatDate(comment.createdAt) }}</p>
+            <p class="comment-item__date">作成日：{{ formatDate(comment.created_at) }}</p>
           </div>
         </div>
         <p v-else class="comments-list__empty">まだコメントがありません</p>

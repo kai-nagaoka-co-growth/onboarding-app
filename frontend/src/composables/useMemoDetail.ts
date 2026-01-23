@@ -3,16 +3,16 @@ import { ref } from 'vue'
 export type Comment = {
   id: number
   body: string
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
 }
 
 export type MemoDetail = {
   id: number
   title: string
   body?: string
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
   comments?: Comment[]
 }
 
@@ -40,19 +40,7 @@ async function fetchMemoDetail (id: string) {
 
     const data = await res.json()
 
-    memo.value = {
-      id: Number(data.id),
-      title: String(data.title),
-      body: String(data.body ?? ''),
-      createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
-      comments: (data.comments || []).map((comment: any) => ({
-        id: Number(comment.id),
-        body: String(comment.body),
-        createdAt: new Date(comment.created_at),
-        updatedAt: new Date(comment.updated_at),
-      })),
-    }
+    memo.value = data
   } catch (e: any) {
     error.value = e?.message ?? '詳細の取得に失敗しました'
     memo.value = null
