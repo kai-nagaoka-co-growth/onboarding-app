@@ -10,6 +10,11 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  // 下記を追加
+  server: {
+    host: true, // これにより外部からのアクセスが許可
+    port: 5173, // ポート番号
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
