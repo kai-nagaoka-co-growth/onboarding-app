@@ -26,10 +26,6 @@ export default function useCreateComment () {
       }
       const created = await res.json().catch(() => null)
 
-      // if (created && memoRef?.value) {
-      //   const list = memoRef.value.comments ?? []
-      //   memoRef.value = { ...memoRef.value, comments: [created, ...list] }
-      // }
       newCommentBody.value = ''
       return created
     } catch (e) {
